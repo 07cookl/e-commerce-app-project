@@ -13,17 +13,13 @@ customersRouter.put('/:id', db.updateCustomerById);
 
 customersRouter.delete('/:id', db.deleteCustomerById);
 
-customersRouter.get('/:id/orders', db.getOrdersByCustomerId);
-
-customersRouter.post('/:id/createOrder', db.createNewOrder);
-
 customersRouter.post('/:id/cart', (req, res) => {
     cartDb.createCart(req.params.id);
     res.status(201).send('Cart created.');
 });
 
-customersRouter.put('/:id/cart', (req, res) => {
-    const updatedCart = cartDb.updateCart(req.params.id, req.query.productId);
+customersRouter.put('/:id/cart', async (req, res) => {
+    const updatedCart = await cartDb.updateCart(req.params.id, req.query.productId);
     res.status(201).json(updatedCart);
 });
 
@@ -36,6 +32,11 @@ customersRouter.get('/:id/cart', (req, res) => {
         .catch(error => {
             console.log(error.message);
         });
+});
+
+customersRouter.post('/:id/cart/checkout', (req, res) => {
+    const orderPlaced = cartDb.checkout(req.params.id);
+    res.status(201).send(orderPlaced);
 });
 
 module.exports = customersRouter;
