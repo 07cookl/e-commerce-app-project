@@ -95,3 +95,67 @@
 -- UPDATE customers
 -- SET username = 'GodOfThunder123'
 -- WHERE id = 3;
+
+-- CREATE TABLE categories (
+--     id serial PRIMARY KEY,
+--     name varchar
+-- );
+
+-- INSERT INTO categories (name)
+-- VALUES ('Category 1'),
+-- ('Category 2'),
+-- ('Category 3'),
+-- ('Category 4'),
+-- ('Category 5');
+
+-- ALTER TABLE products
+-- ADD COLUMN category_id integer;
+
+-- ALTER TABLE products
+-- ADD FOREIGN KEY (category_id) REFERENCES categories(id);
+
+-- UPDATE products
+-- SET category_id = 1
+-- WHERE id = 1;
+
+-- UPDATE products
+-- SET category_id = 2
+-- WHERE id = 2;
+
+-- UPDATE products
+-- SET category_id = 3
+-- WHERE id = 3;
+
+-- UPDATE products
+-- SET category_id = 4
+-- WHERE id = 4;
+
+-- UPDATE products
+-- SET category_id = 5
+-- WHERE id = 5;
+
+-- CREATE TABLE carts (
+--     id serial PRIMARY KEY,
+--     customer_id integer REFERENCES customers(id)
+-- );
+
+-- CREATE TABLE carts_products (
+--     cart_id integer REFERENCES carts(id),
+--     product_id integer REFERENCES products(id),
+--     PRIMARY KEY (cart_id, product_id)
+-- );
+
+-- INSERT INTO carts (customer_id)
+-- VALUES (1),
+-- (2),
+-- (3);
+
+-- INSERT INTO carts_products (cart_id, product_id)
+-- VALUES (1, 1),
+-- (1, 4),
+-- (1, 5),
+-- (2, 2),
+-- (2, 3),
+-- (2, 4),
+-- (3, 1),
+-- (3, 2);

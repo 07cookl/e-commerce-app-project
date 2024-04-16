@@ -6,10 +6,12 @@ const store = new session.MemoryStore();
 const morgan = require('morgan');
 const CORS = require('cors');
 const db = require('./db/customers/functions_customers');
+const cart = require('./db/cart/functions_cart');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
 const PORT = process.env.PORT || 4001;
+require('dotenv').config();
 
 app.use(bodyParser.json());
 app.use(
@@ -24,7 +26,7 @@ app.use(CORS());
 
 app.use(
     session ({
-        secret: 'secret',
+        secret: process.env.SECRET_KEY,
         cookie: { maxAge: 1000*60*60, secure: false },
         saveUninitialized: false,
         resave: false,
