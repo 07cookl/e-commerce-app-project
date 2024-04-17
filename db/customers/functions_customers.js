@@ -13,7 +13,20 @@ const getAllCustomers = (req, res) => {
     );
 };
 
-const getCustomerById = (id, callback) => {
+const getCustomerById = (req, res) => {
+    pool.query(
+        'SELECT * FROM customers WHERE id = $1',
+        [req.params.id],
+        (error, results) => {
+            if (error) {
+                throw error;
+            };
+            res.status(200).json(results.rows[0]);
+        }
+    );
+};
+
+const serializeCustomer = (id, callback) => {
     pool.query(
         'SELECT * FROM customers WHERE id = $1',
         [id],
@@ -27,34 +40,30 @@ const getCustomerById = (id, callback) => {
     );
 };
 
-const getCustomerByEmail = (email, callback) => {
-    pool.query(
-        'SELECT * FROM customers WHERE email = $1',
-        [email],
-        (error, results) => {
-            if (error) {
-                return callback(error, null);
-            };
-            if (results.rows.length === 0) {
-                return callback(null, null);
+const getCustomerByEmail = (email) => {
+    return new Promise ((resolve, reject) => {
+        pool.query(
+            'SELECT * FROM customers WHERE email = $1',
+            [email],
+            (error, results) => {
+                if (error) {
+                    reject(error);
+                };
+                resolve(results.rows);
             }
-            const user = results.rows[0];
-            return callback(null, user);
-        }
-    );
+        );
+    })
 };
 
 const createNewCustomer = async (req, res) => {
     const { username, email, password } = req.body;
 
     try {
-        const user = getCustomerByEmail(email, function (email, user) {
-            return user;
-        });
+        const user = await getCustomerByEmail(email);
 
-        if (user) {
+        if (user.length > 0) {
             console.log('User already exists');
-            res.redirect('login');
+            return res.redirect('login');
         };
 
         const salt = await bcrypt.genSalt(10);
@@ -72,34 +81,39 @@ const createNewCustomer = async (req, res) => {
                 res.status(201).send(`New User ${username} created with ID: ${results.rows[0].id}`);
             }
         );
-
-        res.redirect('login');
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json({ message: err });
     };
 };
 
-const updateCustomerById = (req, res) => {
+const updateCustomerById = async (req, res) => {
     const { username, email, password } = req.body;
     const id = req.params.id;
 
-    pool.query(
-        'UPDATE customers SET username = $1, email = $2, password = $3 WHERE id = $4 RETURNING *',
-        [username, email, password, id],
-        (error, results) => {
-            if (error) {
-                throw error;
-            };
-            if (typeof results.rows == 'undefined') {
-                res.status(404).send('Resource not found.');
-            } 
-            else if (Array.isArray(results.rows) && results.rowCount < 1) {
-                res.status(404).send('User Not Found.');
-            } else {
-                res.status(200).send(`Succesfully updated customer ${username} with ID ${results.rows[0].id}`);
+    try {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        pool.query(
+            'UPDATE customers SET username = $1, email = $2, password = $3 WHERE id = $4 RETURNING *',
+            [username, email, hashedPassword, id],
+            (error, results) => {
+                if (error) {
+                    throw error;
+                };
+                if (typeof results.rows == 'undefined') {
+                    res.status(404).send('Resource not found.');
+                } 
+                else if (Array.isArray(results.rows) && results.rowCount < 1) {
+                    res.status(404).send('User Not Found.');
+                } else {
+                    res.status(200).send(`Succesfully updated customer ${username} with ID ${results.rows[0].id}`);
+                }
             }
-        }
-    );
+        );
+    } catch (err) {
+        res.status(500).json({ message: err });
+    }
 };
 
 const deleteCustomerById = (req, res) => {
@@ -153,6 +167,7 @@ const createNewOrder = (req, res) => {
 module.exports = {
     getAllCustomers,
     getCustomerById,
+    serializeCustomer,
     getCustomerByEmail,
     createNewCustomer,
     updateCustomerById,

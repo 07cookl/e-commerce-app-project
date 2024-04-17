@@ -34,9 +34,9 @@ customersRouter.get('/:id/cart', (req, res) => {
         });
 });
 
-customersRouter.post('/:id/cart/checkout', (req, res) => {
-    const orderPlaced = cartDb.checkout(req.params.id);
-    res.status(201).send(orderPlaced);
+customersRouter.post('/:id/cart/checkout', async (req, res) => {
+    const orderPlaced = await cartDb.checkout(req.params.id);
+    res.status(201).json(orderPlaced);
 });
 
 module.exports = customersRouter;

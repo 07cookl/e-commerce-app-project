@@ -42,7 +42,7 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-    db.getCustomerById(id, function(err, user) {
+    db.serializeCustomer(id, function(err, user) {
         if (err) {
             return done(err);
         };

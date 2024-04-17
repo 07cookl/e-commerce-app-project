@@ -119,7 +119,7 @@ const checkout = async (customerId) => {
             [customerId]
         );
 
-        return `Order ${orderId} successfully placed.`;
+        return { message: `Order ${orderId} successfully placed.` };
     } catch (error) {
         throw error;
     }
