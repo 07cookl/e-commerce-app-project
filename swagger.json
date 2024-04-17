@@ -1,0 +1,311 @@
+    {
+    "openapi": "3.0.3",
+    "info": {
+    "title": "e-commerce-api-project",
+    "version": "1.0.0",
+    "description": "A project to design a backend using Express, Node.js and PostgreSQL."
+    },
+    "paths": {
+    "/customers": {
+        "summary": "Get all of the customers data",
+        "description": "This path is used to retrieve all of the customers data.",
+        "get": {
+        "summary": "Gets the customers data",
+        "description": "Retrieve the data for all customers from the database.",
+        "operationId": "get_customers",
+        "responses": {
+            "default": {
+            "description": "Default error sample response"
+            }
+        },
+        "tags": [
+            "Customers"
+        ]
+        }
+    },
+    "/customers/{id}": {
+        "summary": "Access routes for a specific customer using their id",
+        "description": "This path uses a customer's id to retrieve, update and delete information.",
+        "get": {
+        "summary": "Gets information for a specific customer",
+        "description": "Uses the customer's id to get their information",
+        "operationId": "get_customer_by_id",
+        "responses": {
+            "default": {
+            "description": "Default error sample response"
+            }
+        },
+        "tags": [
+            "Customers"
+        ]
+        },
+        "put": {
+        "summary": "Updates a customer's data",
+        "description": "Updates a customer's username, email and password using their id",
+        "operationId": "update_customer",
+        "requestBody": {
+            "description": "A new order object",
+            "content": {
+            "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Customer"
+                }
+            }
+            }
+        },
+        "responses": {
+            "default": {
+            "description": "Default error sample response"
+            }
+        },
+        "tags": [
+            "Customers"
+        ]
+        },
+        "delete": {
+        "summary": "Deletes the customer",
+        "description": "Deletes a customer from the database using their id",
+        "operationId": "delete_customer",
+        "responses": {
+            "default": {
+            "description": "Default error sample response"
+            }
+        },
+        "tags": [
+            "Customers"
+        ]
+        },
+        "parameters": [
+        {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the customer.",
+            "required": true,
+            "schema": {
+            "type": "string"
+            }
+        }
+        ]
+    },
+    "/customers/register": {
+        "summary": "Post a new customer to the database",
+        "description": "This path creates a new customer and adds them to the database.",
+        "post": {
+        "summary": "Creates a new customer",
+        "description": "Creates a customer with a username, email and password, automatically assigning an id",
+        "operationId": "create_new_customer",
+        "requestBody": {
+            "description": "A new order object",
+            "content": {
+            "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Customer"
+                }
+            }
+            }
+        },
+        "responses": {
+            "default": {
+            "description": "Default error sample response"
+            }
+        },
+        "tags": [
+            "Customers"
+        ]
+        }
+    },
+    "/customers/{id}/cart": {
+        "summary": "Access routes for a specific customer's cart using the customer id",
+        "description": "This route allows creating, updating and retrieving a customer's cart, using their id.",
+        "post": {
+        "summary": "Creates a new cart",
+        "description": "Creates a new cart for a customer using their id",
+        "operationId": "create_new_cart",
+        "responses": {
+            "default": {
+            "description": "Default error sample response"
+            }
+        },
+        "tags": [
+            "Customers"
+        ]
+        },
+        "put": {
+        "summary": "Updates the customer's cart",
+        "description": "Adds a product to the customer's cart, including the product id as a query",
+        "operationId": "update_cart",
+        "responses": {
+            "default": {
+            "description": "Default error sample response"
+            }
+        },
+        "tags": [
+            "Customers"
+        ]
+        },
+        "get": {
+        "summary": "Gets customer's cart",
+        "description": "Retrieves all information about products currently in the customer's cart",
+        "operationId": "get_cart",
+        "responses": {
+            "default": {
+            "description": "Default error sample response"
+            }
+        },
+        "tags": [
+            "Customers"
+        ]
+        },
+        "parameters": [
+        {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the customer.",
+            "required": true,
+            "schema": {
+            "type": "string"
+            }
+        }
+        ]
+    },
+    "/customers/{id}/cart/checkout": {
+        "summary": "Checks a customer out with their basket",
+        "description": "This path checks a customer out with their current basket, processing the payment, adding the order and emptying the basket.",
+        "post": {
+        "summary": "Checks a customer out",
+        "description": "Checks the customer out, processing their payment, adding the order to the database and emptying the customer's cart",
+        "operationId": "customer_checkout",
+        "parameters": [
+            {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the customer.",
+            "required": true,
+            "schema": {
+                "type": "string"
+            }
+            }
+        ],
+        "responses": {
+            "default": {
+            "description": "Default error sample response"
+            }
+        },
+        "tags": [
+            "Customers"
+        ]
+        }
+    },
+    "/products": {
+        "summary": "Get all of the products data",
+        "description": "This path retrieves all of the information about current products.",
+        "get": {
+        "summary": "Gets all products",
+        "description": "Retrieves the data for all products in the database",
+        "operationId": "get_products",
+        "responses": {
+            "default": {
+            "description": "Default error sample response"
+            }
+        },
+        "tags": [
+            "Products"
+        ]
+        }
+    },
+    "/products/{id}": {
+        "summary": "Get the data for a specific product using its id",
+        "description": "This path uses a product's id to retrieve all data about that product",
+        "get": {
+        "summary": "Gets a specific product",
+        "description": "Retrieves all data on a specific product using its id",
+        "operationId": "get_product_by_id",
+        "parameters": [
+            {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the product.",
+            "required": true,
+            "schema": {
+                "type": "string"
+            }
+            }
+        ],
+        "responses": {
+            "default": {
+            "description": "Default error sample response"
+            }
+        },
+        "tags": [
+            "Products"
+        ]
+        }
+    },
+    "/orders": {
+        "summary": "Get all of the orders data",
+        "description": "This path retrieves all of the information about orders that have been placed.",
+        "get": {
+        "summary": "Gets all orders",
+        "description": "Retrieves all data about all orders from the database",
+        "operationId": "get_orders",
+        "responses": {
+            "default": {
+            "description": "Default error sample response"
+            }
+        },
+        "tags": [
+            "Orders"
+        ]
+        }
+    },
+    "/orders/{id}": {
+        "summary": "Get the data for a specific order",
+        "description": "This path retrieves all information for a specific order, using the order id.",
+        "get": {
+        "summary": "Gets a specific order",
+        "description": "Retrieves all information about a specific order using the order id",
+        "operationId": "get_order_by_id",
+        "parameters": [
+            {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the order.",
+            "required": true,
+            "schema": {
+                "type": "string"
+            }
+            }
+        ],
+        "responses": {
+            "default": {
+            "description": "Default error sample response"
+            }
+        },
+        "tags": [
+            "Orders"
+        ]
+        }
+    }
+    },
+    "components": {
+    "schemas": {
+        "Customer": {
+        "type": "object",
+        "properties": {
+            "username": {
+            "type": "string"
+            },
+            "email": {
+            "type": "string"
+            },
+            "password": {
+            "type": "string"
+            }
+        },
+        "xml": {
+            "name": "Customer"
+        }
+        }
+    }
+    }
+    }

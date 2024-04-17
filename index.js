@@ -98,6 +98,12 @@ app.get('/', (req, res) => {
     res.json({ info: 'Node.js, Express and PostgreSQL API'})
 });
 
+// serve swagger
+app.get('/swagger.json', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(swaggerSpec);
+});
+
 const customersRouter = require('./db/customers/queries_customers');
 app.use('/customers', customersRouter);
 
@@ -106,6 +112,13 @@ app.use('/products', productsRouter);
 
 const ordersRouter = require('./db/orders/queries_orders');
 app.use('/orders', ordersRouter);
+
+const swaggerUi = require('swagger-ui-express');
+
+const swaggerDocument = require('./swagger.json');
+
+// Serves Swagger API documentation to /docs url
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
