@@ -78,7 +78,7 @@ const createNewCustomer = async (req, res) => {
                 } else if (!Array.isArray(results.rows) || results.rowCount < 1) {
                     throw error;
                 };
-                res.status(201).send(`New User ${username} created with ID: ${results.rows[0].id}`);
+                res.status(201).send(results.rows[0]);
             }
         );
     } catch (err) {
