@@ -3,7 +3,7 @@ import styles from "./Home.module.css";
 import { NavLink, Outlet } from "react-router-dom";
 import ROUTES from "../../app/routes";
 
-export default function Home () {
+export default function Home ({ user }) {
     return (
         <div>
             <nav>
@@ -16,11 +16,6 @@ export default function Home () {
                     <li>
                         <NavLink to={ROUTES.register()} >
                             Register
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink to={ROUTES.login()} >
-                            Login
                         </NavLink>
                     </li>
                     <li>
@@ -43,11 +38,19 @@ export default function Home () {
                             Products
                         </NavLink>
                     </li>
+                    {localStorage.getItem("user") && localStorage.getItem("user") !== "undefined" ?
                     <li>
                         <NavLink to={ROUTES.profile()} >
                             Profile
                         </NavLink>
                     </li>
+                    :
+                    <li>
+                        <NavLink to={ROUTES.login()} >
+                            Login
+                        </NavLink>
+                    </li>
+}
                 </ul>
             </nav>
             <Outlet/>

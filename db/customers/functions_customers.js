@@ -26,7 +26,8 @@ const getCustomerById = (req, res) => {
     );
 };
 
-const serializeCustomer = (id, callback) => {
+const serializeCustomer = async (id, callback) => {
+    console.log('serializing user');
     pool.query(
         'SELECT * FROM customers WHERE id = $1',
         [id],
@@ -41,6 +42,7 @@ const serializeCustomer = (id, callback) => {
 };
 
 const getCustomerByEmail = (email) => {
+    console.log(`getting customer ${email} by email`);
     return new Promise ((resolve, reject) => {
         pool.query(
             'SELECT * FROM customers WHERE email = $1',
@@ -53,6 +55,14 @@ const getCustomerByEmail = (email) => {
             }
         );
     })
+};
+
+const getUserById = async (id) => {
+    const user = await pool.query(
+        'SELECT * FROM customers WHERE id = $1',
+        [id]
+    );
+    return user.rows[0];
 };
 
 const createNewCustomer = async (req, res) => {
@@ -78,7 +88,7 @@ const createNewCustomer = async (req, res) => {
                 } else if (!Array.isArray(results.rows) || results.rowCount < 1) {
                     throw error;
                 };
-                res.status(201).send(results.rows[0]);
+                res.status(201).send({ user: results.rows[0] });
             }
         );
     } catch (err) {
@@ -173,5 +183,6 @@ module.exports = {
     updateCustomerById,
     deleteCustomerById,
     getOrdersByCustomerId,
-    createNewOrder
+    createNewOrder,
+    getUserById
 };

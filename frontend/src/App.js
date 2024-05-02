@@ -1,5 +1,5 @@
 import './App.css';
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   BrowserRouter,
   Route,
@@ -15,13 +15,24 @@ import Profile from './components/Profile/Profile';
 import Register from './components/Register/Register';
 
 export default function App() {
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem("user");
+
+    if (loggedInUser && loggedInUser !== "undefined") {
+      const foundUser = JSON.parse(loggedInUser);
+      setUser(foundUser);
+    }
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home/>}>
-          <Route path="/register" element={<Register/>}/>
-          <Route path="/login" element={<Login/>}/>
-          <Route path="/profile/:id" element={<Profile/>}/>
+        <Route path="/" element={<Home />}>
+          <Route path="/register" element={<Register setUser={setUser} />}/>
+          <Route path="/login" element={<Login setUser={setUser} />}/>
+          <Route path="/profile" element={<Profile user={user} setUser={setUser} />}/>
           <Route path="/products" element={<Products/>}/>
           <Route path="/product/:id" element={<Product/>}/>
           <Route path="/error" element={<Error/>}/>

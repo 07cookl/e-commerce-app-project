@@ -5,13 +5,14 @@ const session = require('express-session');
 const store = new session.MemoryStore();
 const morgan = require('morgan');
 const CORS = require('cors');
-const db = require('./db/customers/functions_customers');
-const cart = require('./db/cart/functions_cart');
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const bcrypt = require('bcrypt');
 const PORT = process.env.PORT || 4001;
-require('dotenv').config();
+const initializePassport = require('./passport.config');
+const flash = require('express-flash');
+
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
 
 app.use(bodyParser.json());
 app.use(
@@ -19,10 +20,22 @@ app.use(
         extended: true,
     })
 );
-app.set("view engine", "ejs");
+
+app.use(express.urlencoded({ extended: false }));
+app.use(flash());
 
 app.use(morgan('dev'));
-app.use(CORS());
+
+const corsOptions = {
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+};
+
+app.use(CORS(corsOptions));
+
+initializePassport(passport);
 
 app.use(
     session ({
@@ -37,62 +50,34 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.serializeUser((user, done) => {
-    done(null, user.id);
-});
 
-passport.deserializeUser((id, done) => {
-    db.serializeCustomer(id, function(err, user) {
+app.post('/logout', (req, res, next) => {
+    req.logout(function(err) {
         if (err) {
-            return done(err);
-        };
-        done(null, user);
+            return next(err);
+        }
     });
-});
-
-passport.use(
-    new LocalStrategy(function(email, password, done) {
-        db.getCustomerByEmail(email, function(err, user) {
-            if (err) {
-                return done(err);
-            };
-            if (!user) {
-                return done(null, false);
-            };
-            bcrypt.compare(password, user.password, function(err, isMatch) {
-                if (err) {
-                    return done(err);
-                }
-                if (isMatch) {
-                    return done(null, user);
-                } else {
-                    return done(null, false);
-                }
-            });
-        });
-    })
-);
-
-app.get('/logout', (req, res) => {
-    req.logout();
-    res.redirect('login');
+    res.send({ logout: true });
 });
 
 app.get('/login', (req, res) => {
-    res.render('login');
-});
+    const errorMessage = req.flash('error')[0];
+    console.log(errorMessage);
+    res.send({ error: errorMessage })
+})
 
-app.post(
-    '/login',
-    passport.authenticate("local", { failureRedirect: '/login' }),
+app.post('/login', passport.authenticate('local', {
+    failureRedirect: '/login',
+    failureFlash: true
+    }),
     (req, res) => {
-        res.redirect("profile");
+        if (req.user) {
+            res.setHeader('Access-Control-Allow-Credentials', 'true');
+            const user = req.user;
+            res.json({ user: user });
+        }
     }
 );
-
-app.get('/profile', (req, res) => {
-    res.render('profile', { user: req.user });
-});
 
 app.get('/', (req, res) => {
     res.json({ info: 'Node.js, Express and PostgreSQL API'})

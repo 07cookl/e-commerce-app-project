@@ -5,7 +5,7 @@ const ROUTES = {
     login: () => "/login",
     product: (id) => `/product/${id}`,
     products: () => "/products",
-    profile: (id) => `/profile/${id}`,
+    profile: () => `/profile`,
     register: () => "/register",
 };
 
