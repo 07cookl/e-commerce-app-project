@@ -159,3 +159,9 @@
 -- (2, 4),
 -- (3, 1),
 -- (3, 2);
+
+-- CREATE TABLE federated_credentials (
+--     user_id serial PRIMARY KEY,
+--     provider varchar,
+--     subject varchar
+-- );

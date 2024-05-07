@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../api/api";
+import { login, facebookLogin, googleLogin } from "../../api/api";
 import styles from "./Login.module.css";
 
 export default function Login ({setUser}) {
@@ -29,7 +29,28 @@ export default function Login ({setUser}) {
         }
 
         navigate("/profile");
-    }
+    };
+
+    const handleFacebookLogin = async (e) => {
+        e.preventDefault();
+        const user = await facebookLogin();
+        setUser(user);
+
+        if (user.error) {
+            setErrorMessage(user.error);
+            return;
+        }
+
+        navigate("/profile");
+    };
+
+    const handleGoogleLogin = async (e) => {
+        e.preventDefault();
+        const user = await googleLogin();
+        setUser(user);
+
+        navigate("/profile");
+    };
 
     return (
         <div>
@@ -40,6 +61,8 @@ export default function Login ({setUser}) {
                 <input type="password" id="password" name="password" value={password} onChange={(e) => {setPassword(e.target.value)}} required />
                 <button type="submit">Login</button>
             </form>
+            <button onClick={handleFacebookLogin}>Log In With Facebook</button>
+            <button onClick={handleGoogleLogin}>Log In With Google</button>
         </div>
     )
 };

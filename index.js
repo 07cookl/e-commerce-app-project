@@ -4,15 +4,18 @@ const app = express();
 const session = require('express-session');
 const store = new session.MemoryStore();
 const morgan = require('morgan');
+const path = require('path');
 const CORS = require('cors');
 const passport = require('passport');
 const PORT = process.env.PORT || 4001;
-const initializePassport = require('./passport.config');
+const {passportInitialize, facebookInitialize} = require('./passport.config');
 const flash = require('express-flash');
 
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(bodyParser.json());
 app.use(
@@ -35,7 +38,8 @@ const corsOptions = {
 
 app.use(CORS(corsOptions));
 
-initializePassport(passport);
+passportInitialize(passport);
+facebookInitialize(passport);
 
 app.use(
     session ({
@@ -79,14 +83,63 @@ app.post('/login', passport.authenticate('local', {
     }
 );
 
+app.get('/login/facebook', passport.authenticate('facebook'));
+
+app.get('/oauth2/redirect/facebook',
+    passport.authenticate('facebook', { failureRedirect: '/login', failureMessage: true }),
+    function(req, res) {
+        if (req.user) {
+            res.setHeader('Access-Control-Allow-Credentials', 'true');
+            const user = req.user;
+            res.json({ user: user });
+        }
+    }
+);
+
+app.get('/oauth2/redirect/google', passport.authenticate('google', {
+    failureRedirect: '/login'
+    }),
+    // (req, res) => {
+    //     console.log('oauth2 endpoint firing');
+    //     if (req.user) {
+    //         // res.setHeader('Access-Control-Allow-Credentials', 'true');
+    //         const user = req.user;
+    //         res.json({ user: user });
+    //     }
+    // }
+    function(req, res) {
+        var responseHTML = '<html><head><title>Main</title></head><body></body><script>res = %value%; window.opener.postMessage(res, "*");window.close();</script></html>'
+        responseHTML = responseHTML.replace('%value%', JSON.stringify({
+            user: req.user
+        }));
+        res.status(200).send(responseHTML);
+    }
+);
+
 app.get('/', (req, res) => {
     res.json({ info: 'Node.js, Express and PostgreSQL API'})
 });
 
-// serve swagger
-app.get('/swagger.json', function(req, res) {
-    res.setHeader('Content-Type', 'application/json');
-    res.send(swaggerSpec);
+const authRouter = require("./routes/auth-routes");
+app.use('/auth', authRouter);
+const authCheck = (req, res, next) => {
+    if (!req.user) {
+        res.status(401).json({
+            authenticated: false,
+            message: "user has not been authenticated"
+        });
+    } else {
+        next();
+    };
+};
+
+app.get("/", authCheck, (req, res) => {
+    res.status(200).json({
+        authenticated: true,
+        message: "user successfully authenticated",
+        user: req.user,
+        cookies: req.cookies
+    });
 });
 
 const customersRouter = require('./db/customers/queries_customers');
@@ -97,6 +150,12 @@ app.use('/products', productsRouter);
 
 const ordersRouter = require('./db/orders/queries_orders');
 app.use('/orders', ordersRouter);
+
+// serve swagger
+app.get('/swagger.json', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(swaggerSpec);
+});
 
 const swaggerUi = require('swagger-ui-express');
 

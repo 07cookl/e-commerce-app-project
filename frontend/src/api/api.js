@@ -58,8 +58,32 @@ export const login = async (email, password) => {
     };
 };
 
+export const facebookLogin = async () => {
+    try {
+        const response = await fetch(`${API_ENDPOINT}/login/facebook`);
+        console.log(response);
+        const jsonResponse = await response.json();
+        return jsonResponse;
+    } catch (err) {
+        console.log(err);
+    };
+};
+
+export const googleLogin = () => {
+    return new Promise((resolve, reject) => {
+        window.open('http://localhost:4001/auth/login/federated/google',"mywindow","location=1,status=1,scrollbars=1, width=800,height=800");
+        window.addEventListener('message', (message) => {
+            const data = message.data.user;
+            const jsonData = JSON.stringify(message.data.user);
+            localStorage.setItem("user", jsonData);
+            resolve(data);
+        });
+
+    })
+};
+
 export const logout = async () => {
-    const response = await fetch(`${API_ENDPOINT}/logout`, {
+    const response = await fetch(`${API_ENDPOINT}/auth/logout`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
