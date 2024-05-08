@@ -23,7 +23,7 @@ export default function Profile ({ user, setUser }) {
 
     return (
         <div>
-            <p>This is the Profile page for {user.username}.</p>
+            <p>{user ? `This is the Profile page for ${user.username}.` : "collecting user data..."}</p>
             <br/>
             <button onClick={handleLogout}>Logout</button>
         </div>

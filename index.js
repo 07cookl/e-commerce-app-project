@@ -39,7 +39,7 @@ const corsOptions = {
 app.use(CORS(corsOptions));
 
 passportInitialize(passport);
-facebookInitialize(passport);
+// facebookInitialize(passport);
 
 app.use(
     session ({
@@ -83,30 +83,35 @@ app.post('/login', passport.authenticate('local', {
     }
 );
 
-app.get('/login/facebook', passport.authenticate('facebook'));
+// app.get('/login/facebook', passport.authenticate('facebook'));
 
-app.get('/oauth2/redirect/facebook',
-    passport.authenticate('facebook', { failureRedirect: '/login', failureMessage: true }),
+// app.get('/oauth2/redirect/facebook',
+//     passport.authenticate('facebook', { failureRedirect: '/login', failureMessage: true }),
+//     function(req, res) {
+//         if (req.user) {
+//             res.setHeader('Access-Control-Allow-Credentials', 'true');
+//             const user = req.user;
+//             res.json({ user: user });
+//         }
+//     }
+// );
+
+app.get('/oauth2/redirect/facebook', passport.authenticate('facebook', {
+    failureRedirect: '/login',
+    scope: ['email']
+    }),
     function(req, res) {
-        if (req.user) {
-            res.setHeader('Access-Control-Allow-Credentials', 'true');
-            const user = req.user;
-            res.json({ user: user });
-        }
+        var responseHTML = '<html><head><title>Main</title></head><body></body><script>res = %value%; window.opener.postMessage(res, "*");window.close();</script></html>'
+        responseHTML = responseHTML.replace('%value%', JSON.stringify({
+            user: req.user
+        }));
+        res.status(200).send(responseHTML);
     }
 );
 
 app.get('/oauth2/redirect/google', passport.authenticate('google', {
     failureRedirect: '/login'
     }),
-    // (req, res) => {
-    //     console.log('oauth2 endpoint firing');
-    //     if (req.user) {
-    //         // res.setHeader('Access-Control-Allow-Credentials', 'true');
-    //         const user = req.user;
-    //         res.json({ user: user });
-    //     }
-    // }
     function(req, res) {
         var responseHTML = '<html><head><title>Main</title></head><body></body><script>res = %value%; window.opener.postMessage(res, "*");window.close();</script></html>'
         responseHTML = responseHTML.replace('%value%', JSON.stringify({

@@ -34,21 +34,18 @@ export default function Login ({setUser}) {
     const handleFacebookLogin = async (e) => {
         e.preventDefault();
         const user = await facebookLogin();
+
+        console.log(user);
         setUser(user);
-
-        if (user.error) {
-            setErrorMessage(user.error);
-            return;
-        }
-
         navigate("/profile");
     };
 
     const handleGoogleLogin = async (e) => {
         e.preventDefault();
         const user = await googleLogin();
-        setUser(user);
 
+        setUser(user);
+        console.log(user);
         navigate("/profile");
     };
 
