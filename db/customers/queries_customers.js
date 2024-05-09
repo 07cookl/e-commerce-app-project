@@ -30,7 +30,7 @@ customersRouter.get('/:id/cart', (req, res) => {
             res.status(200).json(cart);
         })
         .catch(error => {
-            console.log(error.message);
+            res.send({ cartExists: false });
         });
 });
 

@@ -34,7 +34,7 @@ export default function App() {
           <Route path="/login" element={<Login setUser={setUser} />}/>
           <Route path="/profile" element={<Profile user={user} setUser={setUser} />}/>
           <Route path="/products" element={<Products/>}/>
-          <Route path="/product/:id" element={<Product/>}/>
+          <Route path="/product/:id" element={<Product />}/>
           <Route path="/error" element={<Error/>}/>
           <Route path="/checkout" element={<Checkout/>}/>
         </Route>

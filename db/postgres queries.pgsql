@@ -151,14 +151,14 @@
 -- (3);
 
 -- INSERT INTO carts_products (cart_id, product_id)
--- VALUES (1, 1),
--- (1, 4),
--- (1, 5),
--- (2, 2),
--- (2, 3),
--- (2, 4),
--- (3, 1),
--- (3, 2);
+-- VALUES (20, 1),
+-- (20, 4),
+-- (20, 5),
+-- (21, 2),
+-- (21, 3),
+-- (21, 4),
+-- (22, 1),
+-- (22, 2);
 
 -- CREATE TABLE federated_credentials (
 --     user_id serial PRIMARY KEY,

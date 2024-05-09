@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+import ROUTES from "../../app/routes";
 import styles from "./Products.module.css";
+import { Link } from "react-router-dom";
 import { getProducts } from "../../api/api";
 
 export default function Products () {
@@ -8,7 +10,6 @@ export default function Products () {
     useEffect(() => {
         async function fetchData() {
             const productsData = await getProducts();
-            console.log(productsData);
             setProducts(productsData);
         };
         fetchData();
@@ -17,9 +18,11 @@ export default function Products () {
     return (
         <div>
             <p>This is the Products page.</p>
-            {products.map((product) => {
-                return <p>{product.name}</p>
-            })}
+            {products.map((product, index) => (
+                <Link to={ROUTES.product(product.id)} key={index}>
+                    {product.name}
+                </Link>
+            ))}
         </div>
     )
 };

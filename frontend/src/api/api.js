@@ -58,21 +58,6 @@ export const login = async (email, password) => {
     };
 };
 
-// export const facebookLogin = () => {
-//     return new Promise((resolve, reject) => {
-//         const authWindow = window.open('http://localhost:4001/auth/login/federated/facebook',"mywindow","location=1,status=1,scrollbars=1, width=800,height=800");
-//         window.addEventListener('message', (message) => {
-//             const data = message.data.user;
-//             const jsonData = JSON.stringify(message.data.user);
-//             localStorage.setItem("user", jsonData);
-//             // if (authWindow.closed) {
-//                 console.log(data);
-//                 resolve(data);
-//             // };
-//         });
-//     })
-// };
-
 export const facebookLogin = () => {
     return new Promise((resolve, reject) => {
         const handleMessage = (message) => {
@@ -133,21 +118,18 @@ export const googleLogin = () => {
 
         const authWindow = window.open('http://localhost:4001/auth/login/federated/google',"mywindow","location=1,status=1,scrollbars=1, width=800,height=800");
         
-        // Add event listener
         window.addEventListener('message', handleMessage);
 
-        // Function to remove event listener
         const removeEventListener = () => {
             window.removeEventListener('message', handleMessage);
         };
 
-        // Check if the window is closed
         const checkWindowClosed = setInterval(() => {
             if (authWindow.closed) {
-                clearInterval(checkWindowClosed); // Stop checking
-                removeEventListener(); // Remove the event listener
+                clearInterval(checkWindowClosed);
+                removeEventListener();
             }
-        }, 500); // Check every second
+        }, 500);
     });
 };
 
@@ -170,3 +152,32 @@ export const getProducts = async () => {
 
     return allProducts;
 };
+
+export const getProduct = async (id) => {
+    try {
+        const response = await fetch(`${API_ENDPOINT}/products/${id}`);
+
+        const productData = await response.json();
+
+        const stringResponse = JSON.stringify(productData[0]);
+        localStorage.setItem("product", stringResponse);
+
+        return productData[0];
+    } catch (err) {
+        console.log('Error retreving product data: ', err);
+    };
+};
+
+export const getUserCart = async (userId) => {
+    try {
+        const response = await fetch(`${API_ENDPOINT}/customers/${userId}/cart`);
+        const cartData = await response.json();
+
+        const stringResponse = JSON.stringify(cartData[0]);
+        localStorage.setItem("cart", stringResponse);
+
+        return cartData;
+    } catch (err) {
+        console.log('Error retrieving cart: ', err);
+    }
+}
