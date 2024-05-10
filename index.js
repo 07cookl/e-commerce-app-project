@@ -8,12 +8,15 @@ const path = require('path');
 const CORS = require('cors');
 const passport = require('passport');
 const PORT = process.env.PORT || 4001;
-const {passportInitialize, facebookInitialize} = require('./passport.config');
+const {passportInitialize} = require('./passport.config');
 const flash = require('express-flash');
+const YOUR_DOMAIN = "http://localhost:3000";
 
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
+
+const stripe = require('stripe')(process.env.REACT_APP_STRIPE_CLIENT_SECRET);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -39,7 +42,6 @@ const corsOptions = {
 app.use(CORS(corsOptions));
 
 passportInitialize(passport);
-// facebookInitialize(passport);
 
 app.use(
     session ({
@@ -83,19 +85,6 @@ app.post('/login', passport.authenticate('local', {
     }
 );
 
-// app.get('/login/facebook', passport.authenticate('facebook'));
-
-// app.get('/oauth2/redirect/facebook',
-//     passport.authenticate('facebook', { failureRedirect: '/login', failureMessage: true }),
-//     function(req, res) {
-//         if (req.user) {
-//             res.setHeader('Access-Control-Allow-Credentials', 'true');
-//             const user = req.user;
-//             res.json({ user: user });
-//         }
-//     }
-// );
-
 app.get('/oauth2/redirect/facebook', passport.authenticate('facebook', {
     failureRedirect: '/login',
     scope: ['email']
@@ -137,6 +126,21 @@ const authCheck = (req, res, next) => {
         next();
     };
 };
+
+app.post('/create-checkout-session', async (req, res) => {
+    try {
+        const stripeSession = await stripe.checkout.sessions.create({
+            line_items: req.body,
+            mode: 'payment',
+            success_url: `${YOUR_DOMAIN}/checkout?success=true`,
+            cancel_url: `${YOUR_DOMAIN}/checkout?cancelled=true`,
+        });
+
+        res.send({ redirectUrl: stripeSession.url });
+    } catch (err) {
+        console.log(err);
+    }
+});
 
 app.get("/", authCheck, (req, res) => {
     res.status(200).json({

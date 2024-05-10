@@ -165,3 +165,66 @@
 --     provider varchar,
 --     subject varchar
 -- );
+
+-- ALTER TABLE products
+-- ADD COLUMN price_code varchar;
+
+-- UPDATE products
+-- SET price_code = 'price_1PEtzTLVeJ6uCzHuUqQiHOBh'
+-- WHERE id = 1;
+
+-- UPDATE products
+-- SET name = 'Iron Man Blaster'
+-- WHERE id = 1;
+
+-- UPDATE products
+-- SET description = 'We love this 3000.'
+-- WHERE id = 1;
+
+-- UPDATE products
+-- SET price_code = 'price_1PEtzoLVeJ6uCzHuH7Ta4GMK'
+-- WHERE id = 2;
+
+-- UPDATE products
+-- SET name = 'Cap''s Shield'
+-- WHERE id = 2;
+
+-- UPDATE products
+-- SET description = 'We can do this all day.'
+-- WHERE id = 2;
+
+-- UPDATE products
+-- SET price_code = 'price_1PEtteLVeJ6uCzHu0NWRCyz0'
+-- WHERE id = 3;
+
+-- UPDATE products
+-- SET name = 'Mjolnir'
+-- WHERE id = 3;
+
+-- UPDATE products
+-- SET description = 'Are you Thor, God of Hammers?'
+-- WHERE id = 3;
+
+-- UPDATE products
+-- SET price_code = 'price_1PEu07LVeJ6uCzHuMBcSf6Xy'
+-- WHERE id = 4;
+
+-- UPDATE products
+-- SET name = 'Hawkeye''s Bow'
+-- WHERE id = 4;
+
+-- UPDATE products
+-- SET description = 'Useful for LARPing, just like Hawkeye.'
+-- WHERE id = 4;
+
+-- UPDATE products
+-- SET price_code = 'price_1PEu0HLVeJ6uCzHu2oHqwplW'
+-- WHERE id = 5;
+
+-- UPDATE products
+-- SET name = 'Hulk Fists'
+-- WHERE id = 5;
+
+-- UPDATE products
+-- SET description = 'Smash!'
+-- WHERE id = 5;

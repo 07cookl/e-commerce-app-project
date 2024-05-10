@@ -20,6 +20,13 @@ export const registerUser = async (email, username, password) => {
 
         localStorage.setItem('user', jsonResponse);
 
+        await fetch(`${API_ENDPOINT}/customers/${newUser.user.id}/cart`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+
         return newUser.user;
     } catch (err) {
         throw err;
@@ -52,6 +59,15 @@ export const login = async (email, password) => {
 
         localStorage.setItem('user', jsonResponse);
 
+        const id = user.user.id;
+
+        await fetch(`${API_ENDPOINT}/customers/${id}/cart`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+
         return user.user;
     } catch (err) {
         console.log(err);
@@ -60,7 +76,7 @@ export const login = async (email, password) => {
 
 export const facebookLogin = () => {
     return new Promise((resolve, reject) => {
-        const handleMessage = (message) => {
+        const handleMessage = async (message) => {
             let data = message.data.user;
             if (data) {
                 if (data.name) {
@@ -71,6 +87,14 @@ export const facebookLogin = () => {
                 };
                 const jsonData = JSON.stringify(data);
                 localStorage.setItem("user", jsonData);
+
+                await fetch(`${API_ENDPOINT}/customers/${data.id}/cart`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                });
+
                 resolve(data);
             } else {
                 reject("User data not received from Facebook login.");
@@ -79,27 +103,24 @@ export const facebookLogin = () => {
 
         const authWindow = window.open('http://localhost:4001/auth/login/federated/facebook',"mywindow","location=1,status=1,scrollbars=1, width=800,height=800");
         
-        // Add event listener
         window.addEventListener('message', handleMessage);
 
-        // Function to remove event listener
         const removeEventListener = () => {
             window.removeEventListener('message', handleMessage);
         };
 
-        // Check if the window is closed
         const checkWindowClosed = setInterval(() => {
             if (authWindow.closed) {
-                clearInterval(checkWindowClosed); // Stop checking
-                removeEventListener(); // Remove the event listener
+                clearInterval(checkWindowClosed);
+                removeEventListener();
             }
-        }, 500); // Check every second
+        }, 500);
     });
 };
 
 export const googleLogin = () => {
     return new Promise((resolve, reject) => {
-        const handleMessage = (message) => {
+        const handleMessage = async (message) => {
             let data = message.data.user;
             if (data) {
                 if (data.name) {
@@ -110,6 +131,14 @@ export const googleLogin = () => {
                 };
                 const jsonData = JSON.stringify(data);
                 localStorage.setItem("user", jsonData);
+                
+                await fetch(`${API_ENDPOINT}/customers/${data.id}/cart`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                });
+                
                 resolve(data);
             } else {
                 reject("User data not received from Google login.");
@@ -173,11 +202,81 @@ export const getUserCart = async (userId) => {
         const response = await fetch(`${API_ENDPOINT}/customers/${userId}/cart`);
         const cartData = await response.json();
 
-        const stringResponse = JSON.stringify(cartData[0]);
+        const stringResponse = JSON.stringify(cartData);
         localStorage.setItem("cart", stringResponse);
 
         return cartData;
     } catch (err) {
         console.log('Error retrieving cart: ', err);
     }
+};
+
+export const addToCart = async (userId, productId) => {
+    try {
+        await fetch(`${API_ENDPOINT}/customers/${userId}/cart`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+
+        const response = await fetch(`${API_ENDPOINT}/customers/${userId}/cart`, {
+            method: "PUT",
+            body: JSON.stringify({
+                productId: productId
+            }),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        const jsonResponse = await response.json();
+
+        const stringResponse = JSON.stringify(jsonResponse);
+        localStorage.setItem("cart", stringResponse);
+
+        return jsonResponse;
+    } catch (err) {
+        console.log('Error adding to cart: ', err)
+    }
+};
+
+export const stripeCheckout = async (cartData) => {
+    const stripeProductData = [];
+
+    cartData.forEach(item => {
+        stripeProductData.push({
+            price: item.price_code,
+            quantity: item.quantity
+        })
+    });
+
+    try {
+        const response = await fetch(`${API_ENDPOINT}/create-checkout-session`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(stripeProductData)
+        });
+
+        const jsonResponse = response.json()
+
+        return jsonResponse;
+    } catch (err) {
+        console.log('Error checking out: ', err);
+    }
+};
+
+export const placeOrder = async () => {
+    const id = JSON.parse(localStorage.getItem("user")).id;
+
+    await fetch(`${API_ENDPOINT}/customers/${id}/cart/checkout`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+
+    return;
 }

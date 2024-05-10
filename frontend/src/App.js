@@ -16,6 +16,7 @@ import Register from './components/Register/Register';
 
 export default function App() {
   const [user, setUser] = useState({});
+  const [cartData, setCartData] = useState([]);
 
   useEffect(() => {
     const loggedInUser = localStorage.getItem("user");
@@ -34,9 +35,9 @@ export default function App() {
           <Route path="/login" element={<Login setUser={setUser} />}/>
           <Route path="/profile" element={<Profile user={user} setUser={setUser} />}/>
           <Route path="/products" element={<Products/>}/>
-          <Route path="/product/:id" element={<Product />}/>
+          <Route path="/product/:id" element={<Product user={user} setCartData={setCartData} />}/>
           <Route path="/error" element={<Error/>}/>
-          <Route path="/checkout" element={<Checkout/>}/>
+          <Route path="/checkout" element={<Checkout cartData={cartData} setCartData={setCartData} />}/>
         </Route>
       </Routes>
     </BrowserRouter>

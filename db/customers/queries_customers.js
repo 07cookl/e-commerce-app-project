@@ -14,12 +14,12 @@ customersRouter.put('/:id', db.updateCustomerById);
 customersRouter.delete('/:id', db.deleteCustomerById);
 
 customersRouter.post('/:id/cart', (req, res) => {
-    cartDb.createCart(req.params.id);
-    res.status(201).send('Cart created.');
+    const newCart = cartDb.createCart(req.params.id);
+    res.status(201).send(newCart);
 });
 
 customersRouter.put('/:id/cart', async (req, res) => {
-    const updatedCart = await cartDb.updateCart(req.params.id, req.query.productId);
+    const updatedCart = await cartDb.updateCart(req.params.id, req.body.productId);
     res.status(201).json(updatedCart);
 });
 

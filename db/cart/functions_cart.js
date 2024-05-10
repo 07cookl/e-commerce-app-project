@@ -23,11 +23,13 @@ const createCart = (customerId) => {
                     if (error) {
                         throw error;
                     };
-                    console.log(`New cart created for customer ${results.rows[0].customer_id}`)
+                    console.log(`New cart created for customer ${results.rows[0].customer_id}`);
+                    return { cartCreated: true };
                 }
             );
         } else {
             console.log('Customer already has a cart.');
+            return { cartExists: true };
         }
     }).catch(error => {
         console.log(error.message);
@@ -37,7 +39,7 @@ const createCart = (customerId) => {
 const getCartById = (customerId) => {
     return new Promise((resolve, reject) => {
         pool.query(
-            'SELECT carts.id, products.name, COUNT(*) AS quantity, products.price, product_id FROM carts JOIN carts_products ON carts.id = carts_products.cart_id JOIN products ON carts_products.product_id = products.id WHERE customer_id = $1 GROUP BY products.name, carts.id, products.price, product_id',
+            'SELECT carts.id, products.name, COUNT(*) AS quantity, products.price, product_id, price_code FROM carts JOIN carts_products ON carts.id = carts_products.cart_id JOIN products ON carts_products.product_id = products.id WHERE customer_id = $1 GROUP BY products.name, carts.id, products.price, product_id, price_code',
             [customerId],
             (error, results) => {
                 if (error) {
@@ -95,8 +97,8 @@ const validatePayment = (totalPrice) => {
 const checkout = async (customerId) => {
     try {
         const rows = await getCartById(customerId);
-        const totalPrice = getTotalPrice(rows);
-        validatePayment(totalPrice);
+        // const totalPrice = getTotalPrice(rows);
+        // validatePayment(totalPrice);
 
         const date = Date.now();
         let orderId;

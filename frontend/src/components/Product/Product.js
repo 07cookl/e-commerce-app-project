@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { getProduct } from "../../api/api";
+import { getProduct, addToCart } from "../../api/api";
 import styles from "./Product.module.css";
 import { useParams } from "react-router-dom";
 
-export default function Product () {
+export default function Product ({ user, setCartData }) {
     const [productData, setProductData] = useState({});
     const { id } = useParams(); 
 
@@ -19,9 +19,13 @@ export default function Product () {
         getProductData();
     }, [id]);
 
-    const handleAddToCart = () => {
-        return;
-    }
+    const handleAddToCart = async () => {
+        const updatedCart = await addToCart(user.id, id);
+
+        setCartData(updatedCart);
+        
+        alert(`Added ${productData.name} to cart!`);
+    };
 
     return (
         <div>
