@@ -56,16 +56,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-app.post('/logout', (req, res, next) => {
-    req.logout(function(err) {
-        if (err) {
-            return next(err);
-        }
-    });
-    res.send({ logout: true });
-});
-
 app.get('/login', (req, res) => {
     const errorMessage = req.flash('error')[0];
     console.log(errorMessage);
@@ -77,6 +67,7 @@ app.post('/login', passport.authenticate('local', {
     failureFlash: true
     }),
     (req, res) => {
+        console.log('on log in', req.user);
         if (req.user) {
             res.setHeader('Access-Control-Allow-Credentials', 'true');
             const user = req.user;
@@ -116,16 +107,6 @@ app.get('/', (req, res) => {
 
 const authRouter = require("./routes/auth-routes");
 app.use('/auth', authRouter);
-const authCheck = (req, res, next) => {
-    if (!req.user) {
-        res.status(401).json({
-            authenticated: false,
-            message: "user has not been authenticated"
-        });
-    } else {
-        next();
-    };
-};
 
 app.post('/create-checkout-session', async (req, res) => {
     try {
@@ -140,15 +121,6 @@ app.post('/create-checkout-session', async (req, res) => {
     } catch (err) {
         console.log(err);
     }
-});
-
-app.get("/", authCheck, (req, res) => {
-    res.status(200).json({
-        authenticated: true,
-        message: "user successfully authenticated",
-        user: req.user,
-        cookies: req.cookies
-    });
 });
 
 const customersRouter = require('./db/customers/queries_customers');

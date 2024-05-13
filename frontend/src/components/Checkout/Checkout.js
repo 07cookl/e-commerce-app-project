@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import ROUTES from "../../app/routes";
 import styles from "./Checkout.module.css";
 import { getUserCart, placeOrder, stripeCheckout } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 
 export default function Checkout ({ cartData, setCartData }) {
     const [message, setMessage] = useState("");
+    const navigate = useNavigate();
 
     const id = JSON.parse(localStorage.getItem("user")).id;
 
@@ -12,6 +14,11 @@ export default function Checkout ({ cartData, setCartData }) {
         const getCart = async () => {
             try {
                 const cart = await getUserCart(id);
+
+                if (cart.authenticated === false) {
+                    navigate(ROUTES.login());
+                    return;
+                };
 
                 setCartData(cart);
             } catch (err) {

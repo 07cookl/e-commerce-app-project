@@ -167,7 +167,8 @@ export const logout = async () => {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-        }
+        },
+        credentials: "include",
     });
 
     const jsonResponse = await response.json();
@@ -199,7 +200,9 @@ export const getProduct = async (id) => {
 
 export const getUserCart = async (userId) => {
     try {
-        const response = await fetch(`${API_ENDPOINT}/customers/${userId}/cart`);
+        const response = await fetch(`${API_ENDPOINT}/customers/${userId}/cart`, {
+            credentials: "include",
+        });
         const cartData = await response.json();
 
         const stringResponse = JSON.stringify(cartData);
@@ -217,7 +220,8 @@ export const addToCart = async (userId, productId) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-            }
+            },
+            credentials: "include",
         });
 
         const response = await fetch(`${API_ENDPOINT}/customers/${userId}/cart`, {
@@ -227,11 +231,12 @@ export const addToCart = async (userId, productId) => {
             }),
             headers: {
                 "Content-Type": "application/json"
-            }
+            },
+            credentials: "include",
         });
 
         const jsonResponse = await response.json();
-
+        console.log(jsonResponse);
         const stringResponse = JSON.stringify(jsonResponse);
         localStorage.setItem("cart", stringResponse);
 
@@ -279,4 +284,16 @@ export const placeOrder = async () => {
     });
 
     return;
+};
+
+export const getOrderHistory = async () => {
+    const id = JSON.parse(localStorage.getItem("user")).id;
+
+    const orderHistory = await fetch(`${API_ENDPOINT}/orders/${id}`, {
+        credentials: "include",
+    });
+
+    const jsonOrderHistory = orderHistory.json();
+
+    return jsonOrderHistory;
 }

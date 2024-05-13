@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { getProduct, addToCart } from "../../api/api";
 import styles from "./Product.module.css";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import ROUTES from "../../app/routes";
 
 export default function Product ({ user, setCartData }) {
     const [productData, setProductData] = useState({});
     const { id } = useParams(); 
+    const navigate = useNavigate();
 
     useEffect(() => {
         const getProductData = async () => {
@@ -21,6 +23,11 @@ export default function Product ({ user, setCartData }) {
 
     const handleAddToCart = async () => {
         const updatedCart = await addToCart(user.id, id);
+
+        if (updatedCart.authenticated === false) {
+            navigate(ROUTES.login());
+            return;
+        };
 
         setCartData(updatedCart);
         

@@ -54,62 +54,20 @@ function passportInitialize(passport) {
     })
 };
 
-// function facebookInitialize(passport) {
-//     passport.use(new FacebookStrategy({
-//         clientID: process.env.FACEBOOK_APP_ID,
-//         clientSecret: process.env.FACEBOOK_APP_SECRET,
-//         callbackURL: '/auth/facebook/redirect'
-//         },
-//         function(accessToken, refreshToken, profile, cb) {
-//             pool.query('SELECT * FROM federated_credentials WHERE provider = ? AND subject = ?',
-//             ['https://www.facebook.com', profile.id],
-//             function (err, cred) {
-//                 if (err) {
-//                     return cb(err);
-//                 };
-//                 if (!cred) {
-//                     // The Facebook account has not logged into this app before. Create a new user record and link it to the Facebook account.
-//                     pool.query('INSERT INTO customers (name, email) VALUES (?, ?)',
-//                     [profile.displayName, profile.emails.value],
-//                     function (err) {
-//                         if (err) {
-//                             return cb(err);
-//                         };
-
-//                         var id = this.lastID;
-//                         pool.query('INSERT INTO federated_credentials (user_id, provider, subject) VALUES (?, ?, ?)',
-//                         [id, 'https://www.facebook.com', profile.id],
-//                         function (err) {
-//                             if (err) {
-//                                 return cb(err);
-//                             };
-//                             var user = {
-//                                 id: id.toString(),
-//                                 name: profile.displayName
-//                             };
-//                             return cb(null, user);
-//                         });
-//                     });
-//                 } else {
-//                     // The Facebook account has previously logged into the app. Get the user record linked to the Facebook account and log the user in.
-//                     pool.query('SELECT * FROM customers WHERE id = ?',
-//                     [cred.user_id],
-//                     function (err, user) {
-//                         if (err) {
-//                             return cb(err);
-//                         };
-//                         if (!user) {
-//                             return cb(null, false);
-//                         };
-//                         return cb(null, user);
-//                     });
-//                 }
-//             }
-//         )}
-//     ))
-// };
+const authCheck = (req, res, next) => {
+    console.log('auth check', req.user, req.isAuthenticated());
+    if (req.isAuthenticated()) {
+        next();
+    } else {
+        console.log('failed authentication, redirecting to login page');
+        res.status(401).json({
+            authenticated: false,
+            message: "user has not been authenticated"
+        });
+    };
+};
 
 module.exports = {
     passportInitialize,
-    // facebookInitialize,
+    authCheck
 };

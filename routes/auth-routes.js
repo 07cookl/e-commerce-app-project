@@ -34,8 +34,6 @@ router.post("/logout", (req, res, next) => {
     res.send({ logout: true });
 });
 
-// router.get("/facebook", passport.authenticate("facebook"));
-
 router.get('/login', function(req, res, next) {
     res.send({ user: req.user });
 });
