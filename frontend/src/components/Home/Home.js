@@ -9,11 +9,6 @@ export default function Home ({ user }) {
             <nav>
                 <ul>
                     <li>
-                        <NavLink to={ROUTES.home()} >
-                            Home
-                        </NavLink>
-                    </li>
-                    <li>
                         <NavLink to={ROUTES.register()} >
                             Register
                         </NavLink>
@@ -21,16 +16,6 @@ export default function Home ({ user }) {
                     <li>
                         <NavLink to={ROUTES.checkout()} >
                             Checkout
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink to={ROUTES.error()} >
-                            Error
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink to={ROUTES.product(1)} >
-                            Product
                         </NavLink>
                     </li>
                     <li>
@@ -53,7 +38,9 @@ export default function Home ({ user }) {
 }
                 </ul>
             </nav>
-            <Outlet/>
+            <section className={styles.outlet}>
+                <Outlet/>
+            </section>
         </div>
     )
 };

@@ -26,17 +26,25 @@ export default function Register ({ setUser }) {
     };
 
     return (
-        <section id="register">
-            <form onSubmit={onRegister}>
-                <label htmlFor="email">Email Address: </label>
-                <input type="email" name="email" id="email" value={email} onChange={(e) => {setEmail(e.target.value)}} required/>
-                <label htmlFor="username">Username: </label>
-                <input type="text" name="username" id="username" value={username} onChange={(e) => {setUsername(e.target.value)}} required/>
-                <label htmlFor="password">Password: </label>
-                <input type="password" name="password" id="password" value={password} onChange={(e) => {setPassword(e.target.value)}} required/>
-                <label htmlFor="retype-password">Re-type Password: </label>
-                <input type="password" name="retype-password" id="retype-password" value={checkPassword} onChange={(e) => {setCheckPassword(e.target.value)}} required/>
-                <input type="submit"/>
+        <section className={styles.container} id="register">
+            <form className={styles.loginForm} onSubmit={onRegister}>
+                <div className={styles.formGroup} >
+                    <label className={styles.formLabel} htmlFor="email">Email Address: </label>
+                    <input className={styles.formField} type="email" name="email" id="email" value={email} onChange={(e) => {setEmail(e.target.value)}} required/>
+                </div>
+                <div className={styles.formGroup} >
+                    <label className={styles.formLabel} htmlFor="username">Username: </label>
+                    <input className={styles.formField} type="text" name="username" id="username" value={username} onChange={(e) => {setUsername(e.target.value)}} required/>
+                </div>
+                <div className={styles.formGroup} >
+                    <label className={styles.formLabel} htmlFor="password">Password: </label>
+                    <input className={styles.formField} type="password" name="password" id="password" value={password} onChange={(e) => {setPassword(e.target.value)}} required/>
+                </div>
+                <div className={styles.formGroup} >
+                    <label className={styles.formLabel} htmlFor="retype-password">Re-type Password: </label>
+                    <input className={styles.formField} type="password" name="retype-password" id="retype-password" value={checkPassword} onChange={(e) => {setCheckPassword(e.target.value)}} required/>
+                </div>
+                <button type="submit">Register</button>
             </form>
         </section>
     )

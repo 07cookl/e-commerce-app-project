@@ -8,12 +8,10 @@ export default function Checkout ({ cartData, setCartData }) {
     const [message, setMessage] = useState("");
     const navigate = useNavigate();
 
-    const id = JSON.parse(localStorage.getItem("user")).id;
-
     useEffect(() => {
         const getCart = async () => {
             try {
-                const cart = await getUserCart(id);
+                const cart = await getUserCart();
 
                 if (cart.authenticated === false) {
                     navigate(ROUTES.login());
@@ -26,7 +24,7 @@ export default function Checkout ({ cartData, setCartData }) {
             };
         };
         getCart();
-    }, [id]);
+    }, []);
 
     const ProductDisplay = () => (
         <section>

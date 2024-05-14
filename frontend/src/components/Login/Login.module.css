@@ -1,0 +1,181 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+.container {
+    width: 60vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    background: var(--card);
+    border-radius: 20px;
+    padding: 4rem;
+    font-size: var(--large-font);
+}
+
+.loginForm {
+    width: 60%;
+}
+
+.formGroup {
+    position: relative;
+    padding: 20px 0 0;
+    width: 100%;
+}
+
+.formField {
+    font-family: inherit;
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid #d1d1d1;
+    outline: 0;
+    font-size: var(--medium-font);
+    color: var(--text);
+    padding: 7px 0;
+    background: transparent;
+    transition: border-color 0.2s;
+    margin: 0.5rem 0 1rem;
+}
+
+.formField::placeholder {
+    color: transparent;
+}
+
+.formField:placeholder-shown ~ .form__label {
+    font-size: var(--medium-font);
+    cursor: text;
+    top: 20px;
+}
+
+.formLabel {
+    position: absolute;
+    top: 0;
+    display: block;
+    transition: 0.2s;
+    font-size: var(--medium-font);
+    color: #d1d1d1;
+    pointer-events: none;
+    font-family: 'Roboto', sans-serif;
+}
+
+.formField:focus {
+    padding-bottom: 6px;
+    font-weight: 600;
+    border-width: 3px;
+    border-image: linear-gradient(to right, var(--bold), var(--highlight));
+    border-image-slice: 1;
+    background: transparent;
+    max-width: 100%;
+}
+
+.formField:focus ~ .formLabel {
+    position: absolute;
+    top: 0;
+    display: block;
+    transition: 0.2s;
+    font-size: var(--medium-font);
+    color: var(--highlight);
+    font-weight: 700;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px var(--card) inset !important;
+}
+
+input:-webkit-autofill{
+    -webkit-text-fill-color: var(--text) !important;
+}
+
+/* reset input */
+.formField:required, .formField:invalid {
+    box-shadow: none;
+}
+
+.loginForm button {
+    width: 100%;
+    font-size: var(--small-font);
+    border-radius: 25px;
+    height: 55px;
+    margin-top: 0.5rem;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.25);
+    background: var(--highlight);
+    color: var(--dark-background);
+    font-family: 'Roboto', sans-serif;
+    cursor: pointer;
+}
+
+.buttonContainer {
+    width: 60%;
+}
+
+.btnGoogle, .btnFb {
+    display: flex;
+    justify-content: center;
+    border-radius: 25px;
+    text-decoration: none;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.25);
+    transition: background-color .218s, border-color .218s, box-shadow .218s;
+    cursor: pointer;
+    font-size: var(--small-font);
+    width: 100%;
+}
+
+.googleContent, .fbContent {
+    display: flex;
+    align-items: center;
+    height: 3.2rem;
+}
+
+.googleContent .logo, .fbContent .logo {
+    padding: 15px;
+    height: inherit;
+}
+
+.googleContent svg, .fbContent svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.googleContent p, .fbContent p {
+    width: 100%;
+    line-height: 1;
+    letter-spacing: .21px;
+    text-align: center;
+    font-weight: 500;
+    font-family: 'Roboto', sans-serif;
+}
+
+.btnGoogle {
+    background: #FFF;
+}
+
+.btnGoogle:hover {
+    box-shadow: 0 0 3px 3px rgba(66,133,244,.3);
+}
+
+.btnGoogle:active {
+    background-color: #eee;
+}
+
+.googleContent p {
+    color: #757575;
+}
+
+.btnFb {
+    padding-top: 1.5px;
+    background: #4267b2;
+}
+
+.btnFb:hover {
+    box-shadow: 0 0 3px 3px rgba(59,89,152,.3);
+}
+
+.btnFb:active {
+    background-color: #3b5998;
+}
+
+.fbContent p {
+    color: rgba(255, 255, 255, .87);
+}

@@ -179,7 +179,7 @@ export const getProducts = async () => {
     const response = await fetch(`${API_ENDPOINT}/products`);
 
     const allProducts = await response.json();
-
+console.log(allProducts);
     return allProducts;
 };
 
@@ -198,7 +198,9 @@ export const getProduct = async (id) => {
     };
 };
 
-export const getUserCart = async (userId) => {
+export const getUserCart = async () => {
+    const userId = JSON.parse(localStorage.getItem("user")).id;
+
     try {
         const response = await fetch(`${API_ENDPOINT}/customers/${userId}/cart`, {
             credentials: "include",

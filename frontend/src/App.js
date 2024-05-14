@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import Home from './components/Home/Home';
 import Checkout from './components/Checkout/Checkout';
-import Error from './components/Error/Error';
 import Login from './components/Login/Login';
 import Product from './components/Product/Product';
 import Products from './components/Products/Products';
@@ -36,7 +35,6 @@ export default function App() {
           <Route path="/profile" element={<Profile user={user} setUser={setUser} />}/>
           <Route path="/products" element={<Products/>}/>
           <Route path="/product/:id" element={<Product user={user} setCartData={setCartData} />}/>
-          <Route path="/error" element={<Error/>}/>
           <Route path="/checkout" element={<Checkout cartData={cartData} setCartData={setCartData} />}/>
         </Route>
       </Routes>
