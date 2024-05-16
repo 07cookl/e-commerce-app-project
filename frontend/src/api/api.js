@@ -1,4 +1,5 @@
-const API_ENDPOINT = "http://localhost:4001";
+// const API_ENDPOINT = "http://localhost:4001";
+const API_ENDPOINT = "https://zero7cookl-e-commerce.onrender.com";
 
 export const registerUser = async (email, username, password) => {
     try {
