@@ -17,7 +17,7 @@ if (process.env.NODE_ENV !== 'production') {
 const PORT = process.env.PORT || 4001;
 const DOMAIN = process.env.DOMAIN;
 const stripe = require('stripe')(process.env.REACT_APP_STRIPE_CLIENT_SECRET);
-
+app.set("trust proxy", 1);
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(bodyParser.json());
