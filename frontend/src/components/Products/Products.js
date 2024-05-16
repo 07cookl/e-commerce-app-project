@@ -20,11 +20,10 @@ export default function Products () {
         <section className={styles.container}>
             {products.map((product, index) => (
                 <Link className={styles.product} to={ROUTES.product(product.id)} key={index}>
-                    <img src={productImages[index]}/>
+                    <img src={productImages[product.id - 1]}/>
                     <div className={styles.productInfo}>
                         <h3>{product.name}</h3>
-                        <h5>{product.description}</h5>
-                        <h5>{`£` + product.price.slice(1)}</h5>
+                        <h5>{'£' + product.price.slice(1)}</h5>
                     </div>
                 </Link>
             ))}

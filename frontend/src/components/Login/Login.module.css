@@ -106,6 +106,12 @@ input:-webkit-autofill{
     cursor: pointer;
 }
 
+.registerLink {
+    text-decoration: underline;
+    font-size: var(--small-font);
+    color: var(--text);
+}
+
 .buttonContainer {
     width: 60%;
 }
@@ -178,4 +184,9 @@ input:-webkit-autofill{
 
 .fbContent p {
     color: rgba(255, 255, 255, .87);
+}
+
+.cardDetails {
+    font-size: var(--small-font);
+    line-height: 2rem;
 }

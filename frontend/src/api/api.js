@@ -11,7 +11,8 @@ export const registerUser = async (email, username, password) => {
             }),
             headers: {
                 "Content-Type": "application/json",
-            }
+            },
+            credentials: "include",
         });
 
         const newUser = await response.json();
@@ -20,12 +21,7 @@ export const registerUser = async (email, username, password) => {
 
         localStorage.setItem('user', jsonResponse);
 
-        await fetch(`${API_ENDPOINT}/customers/${newUser.user.id}/cart`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        });
+        await login(newUser.user.email, password);
 
         return newUser.user;
     } catch (err) {
@@ -65,7 +61,8 @@ export const login = async (email, password) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-            }
+            },
+            credentials: "include",
         });
 
         return user.user;
@@ -76,8 +73,9 @@ export const login = async (email, password) => {
 
 export const facebookLogin = () => {
     return new Promise((resolve, reject) => {
+        let data;
         const handleMessage = async (message) => {
-            let data = message.data.user;
+            data = message.data.user;
             if (data) {
                 if (data.name) {
                     data = {
@@ -85,23 +83,10 @@ export const facebookLogin = () => {
                         username: data.name
                     };
                 };
-                const jsonData = JSON.stringify(data);
-                localStorage.setItem("user", jsonData);
-
-                await fetch(`${API_ENDPOINT}/customers/${data.id}/cart`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    }
-                });
-
-                resolve(data);
-            } else {
-                reject("User data not received from Facebook login.");
             }
         };
 
-        const authWindow = window.open('http://localhost:4001/auth/login/federated/facebook',"mywindow","location=1,status=1,scrollbars=1, width=800,height=800");
+        const authWindow = window.open(`${API_ENDPOINT}/auth/login/federated/facebook`,"mywindow","location=1,status=1,scrollbars=1, width=800,height=800");
         
         window.addEventListener('message', handleMessage);
 
@@ -109,10 +94,25 @@ export const facebookLogin = () => {
             window.removeEventListener('message', handleMessage);
         };
 
-        const checkWindowClosed = setInterval(() => {
+        const checkWindowClosed = setInterval(async () => {
             if (authWindow.closed) {
                 clearInterval(checkWindowClosed);
                 removeEventListener();
+                if (data) {
+                    const jsonData = JSON.stringify(data);
+                    localStorage.setItem("user", jsonData);
+    
+                    await fetch(`${API_ENDPOINT}/customers/${data.id}/cart`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        credentials: "include",
+                    });
+                    resolve(data)
+                } else {
+                    reject("User data not received from Facebook Login");
+                };
             }
         }, 500);
     });
@@ -120,8 +120,9 @@ export const facebookLogin = () => {
 
 export const googleLogin = () => {
     return new Promise((resolve, reject) => {
+        let data;
         const handleMessage = async (message) => {
-            let data = message.data.user;
+            data = message.data.user;
             if (data) {
                 if (data.name) {
                     data = {
@@ -129,23 +130,10 @@ export const googleLogin = () => {
                         username: data.name
                     };
                 };
-                const jsonData = JSON.stringify(data);
-                localStorage.setItem("user", jsonData);
-                
-                await fetch(`${API_ENDPOINT}/customers/${data.id}/cart`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    }
-                });
-                
-                resolve(data);
-            } else {
-                reject("User data not received from Google login.");
             }
         };
 
-        const authWindow = window.open('http://localhost:4001/auth/login/federated/google',"mywindow","location=1,status=1,scrollbars=1, width=800,height=800");
+        const authWindow = window.open(`${API_ENDPOINT}/auth/login/federated/google`,"mywindow","location=1,status=1,scrollbars=1, width=800,height=800");
         
         window.addEventListener('message', handleMessage);
 
@@ -153,10 +141,25 @@ export const googleLogin = () => {
             window.removeEventListener('message', handleMessage);
         };
 
-        const checkWindowClosed = setInterval(() => {
+        const checkWindowClosed = setInterval(async() => {
             if (authWindow.closed) {
                 clearInterval(checkWindowClosed);
                 removeEventListener();
+                if (data) {
+                    const jsonData = JSON.stringify(data);
+                    localStorage.setItem("user", jsonData);
+                    
+                    await fetch(`${API_ENDPOINT}/customers/${data.id}/cart`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        credentials: "include",
+                    });
+                    resolve(data)
+                } else {
+                    reject("User data not received from Google Login");
+                };
             }
         }, 500);
     });
@@ -179,7 +182,6 @@ export const getProducts = async () => {
     const response = await fetch(`${API_ENDPOINT}/products`);
 
     const allProducts = await response.json();
-console.log(allProducts);
     return allProducts;
 };
 
@@ -189,10 +191,10 @@ export const getProduct = async (id) => {
 
         const productData = await response.json();
 
-        const stringResponse = JSON.stringify(productData[0]);
+        const stringResponse = JSON.stringify(productData);
         localStorage.setItem("product", stringResponse);
 
-        return productData[0];
+        return productData;
     } catch (err) {
         console.log('Error retreving product data: ', err);
     };
@@ -238,7 +240,6 @@ export const addToCart = async (userId, productId) => {
         });
 
         const jsonResponse = await response.json();
-        console.log(jsonResponse);
         const stringResponse = JSON.stringify(jsonResponse);
         localStorage.setItem("cart", stringResponse);
 
@@ -264,7 +265,8 @@ export const stripeCheckout = async (cartData) => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(stripeProductData)
+            body: JSON.stringify(stripeProductData),
+            credentials: "include",
         });
 
         const jsonResponse = response.json()
@@ -282,7 +284,8 @@ export const placeOrder = async () => {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
-        }
+        },
+        credentials: "include",
     });
 
     return;

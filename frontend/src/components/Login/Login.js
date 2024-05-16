@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { login, facebookLogin, googleLogin } from "../../api/api";
 import styles from "./Login.module.css";
+import ROUTES from "../../app/routes";
 
 export default function Login ({setUser}) {
     const [email, setEmail] = useState('');
@@ -35,7 +36,6 @@ export default function Login ({setUser}) {
         e.preventDefault();
         const user = await facebookLogin();
 
-        console.log(user);
         setUser(user);
         navigate("/profile");
     };
@@ -45,7 +45,6 @@ export default function Login ({setUser}) {
         const user = await googleLogin();
 
         setUser(user);
-        console.log(user);
         navigate("/profile");
     };
 
@@ -62,6 +61,7 @@ export default function Login ({setUser}) {
                 </div>
                 <button type="submit">Login</button>
             </form>
+            <Link className={styles.registerLink} to={ROUTES.register()}>Don't have an account?</Link>
             <div className={styles.buttonContainer}>
                 <button className={styles.btnFb} onClick={handleFacebookLogin}>
                     <div className={styles.fbContent}>
@@ -95,6 +95,11 @@ export default function Login ({setUser}) {
                         <p>Sign in with Google</p>
                     </div>
                 </button>
+            </div>
+            <div className={styles.cardDetails}>
+                <h1>If you would prefer not to sign in/register, use these details:</h1>
+                <h5>Email Address: Iron.Man@avengers.com</h5>
+                <h5>Password: password</h5>
             </div>
         </section>
     )

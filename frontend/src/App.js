@@ -12,6 +12,7 @@ import Product from './components/Product/Product';
 import Products from './components/Products/Products';
 import Profile from './components/Profile/Profile';
 import Register from './components/Register/Register';
+import LandingPage from './components/LandingPage/LandingPage';
 
 export default function App() {
   const [user, setUser] = useState({});
@@ -30,6 +31,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />}>
+          <Route path="/" element={<LandingPage />}/>
           <Route path="/register" element={<Register setUser={setUser} />}/>
           <Route path="/login" element={<Login setUser={setUser} />}/>
           <Route path="/profile" element={<Profile user={user} setUser={setUser} />}/>

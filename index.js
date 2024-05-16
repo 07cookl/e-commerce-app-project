@@ -7,15 +7,15 @@ const morgan = require('morgan');
 const path = require('path');
 const CORS = require('cors');
 const passport = require('passport');
-const PORT = process.env.PORT || 4001;
 const {passportInitialize} = require('./passport.config');
 const flash = require('express-flash');
-const YOUR_DOMAIN = "http://localhost:3000";
 
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
 
+const PORT = process.env.PORT || 4001;
+const DOMAIN = process.env.DOMAIN;
 const stripe = require('stripe')(process.env.REACT_APP_STRIPE_CLIENT_SECRET);
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -33,7 +33,7 @@ app.use(flash());
 app.use(morgan('dev'));
 
 const corsOptions = {
-    origin: 'http://localhost:3000',
+    origin: DOMAIN,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
@@ -67,7 +67,6 @@ app.post('/login', passport.authenticate('local', {
     failureFlash: true
     }),
     (req, res) => {
-        console.log('on log in', req.user);
         if (req.user) {
             res.setHeader('Access-Control-Allow-Credentials', 'true');
             const user = req.user;
@@ -113,8 +112,8 @@ app.post('/create-checkout-session', async (req, res) => {
         const stripeSession = await stripe.checkout.sessions.create({
             line_items: req.body,
             mode: 'payment',
-            success_url: `${YOUR_DOMAIN}/checkout?success=true`,
-            cancel_url: `${YOUR_DOMAIN}/checkout?cancelled=true`,
+            success_url: `${DOMAIN}/checkout?success=true`,
+            cancel_url: `${DOMAIN}/checkout?cancelled=true`,
         });
 
         res.send({ redirectUrl: stripeSession.url });

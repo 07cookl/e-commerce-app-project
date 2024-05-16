@@ -9,7 +9,7 @@ const createCart = (customerId) => {
                 if (error) {
                     reject(error);
                 } else {
-                    console.log(results.rows);
+                    // console.log(results.rows);
                     resolve(results.rows);
                 }
             }
@@ -23,12 +23,12 @@ const createCart = (customerId) => {
                     if (error) {
                         throw error;
                     };
-                    console.log(`New cart created for customer ${results.rows[0].customer_id}`);
+                    // console.log(`New cart created for customer ${results.rows[0].customer_id}`);
                     return { cartCreated: true };
                 }
             );
         } else {
-            console.log('Customer already has a cart.');
+            // console.log('Customer already has a cart.');
             return { cartExists: true };
         }
     }).catch(error => {
@@ -68,37 +68,9 @@ const updateCart = async (customerId, productId) => {
     };
 };
 
-const getTotalPrice = (orderArray) => {
-    if (orderArray.length < 1) {
-        return 0;
-    } else {
-        let prices = [];
-        orderArray.forEach(row => {
-            prices.push(row.price * row.count);
-        });
-        const totalPrice = prices.reduce((a, b) => a + b);
-        return totalPrice;
-    }
-};
-
-const validatePayment = (totalPrice) => {
-    if (totalPrice == 0) {
-        resolve('Cart Empty.');
-    };
-
-    let checkValidPaymentDetails = true;
-
-    if (!checkValidPaymentDetails) {
-        return 'Invalid Payment Details.';
-    };
-    return;
-}
-
 const checkout = async (customerId) => {
     try {
         const rows = await getCartById(customerId);
-        // const totalPrice = getTotalPrice(rows);
-        // validatePayment(totalPrice);
 
         const date = Date.now();
         let orderId;

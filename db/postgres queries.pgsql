@@ -228,3 +228,13 @@
 -- UPDATE products
 -- SET description = 'Smash!'
 -- WHERE id = 5;
+
+-- ALTER TABLE products
+-- ADD COLUMN img_src varchar;
+
+-- UPDATE products
+-- SET img_src = '../../resources/images/products/ironman.jpg'
+-- WHERE id = 1;
+
+-- ALTER TABLE products
+-- DROP COLUMN img_src;

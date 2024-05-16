@@ -27,7 +27,6 @@ const getCustomerById = (req, res) => {
 };
 
 const serializeCustomer = async (id, callback) => {
-    console.log('serializing user');
     pool.query(
         'SELECT * FROM customers WHERE id = $1',
         [id],
@@ -42,7 +41,6 @@ const serializeCustomer = async (id, callback) => {
 };
 
 const getCustomerByEmail = (email) => {
-    console.log(`getting customer ${email} by email`);
     return new Promise ((resolve, reject) => {
         pool.query(
             'SELECT * FROM customers WHERE email = $1',
@@ -72,7 +70,6 @@ const createNewCustomer = async (req, res) => {
         const user = await getCustomerByEmail(email);
 
         if (user.length > 0) {
-            console.log('User already exists');
             return res.redirect('login');
         };
 

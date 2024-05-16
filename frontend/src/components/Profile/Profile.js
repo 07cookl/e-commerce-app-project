@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { logout } from "../../api/api";
 import { useNavigate } from "react-router-dom";
-import ROUTES from "../../app/routes";
 import OrderHistory from "../OrderHistory/OrderHistory";
 import styles from "./Profile.module.css";
 
@@ -24,9 +23,13 @@ export default function Profile ({ user, setUser }) {
 
     return (
         <div>
-            <p>{user ? `This is the Profile page for ${user.username}.` : "collecting user data..."}</p>
-            <br/>
-            <button onClick={handleLogout}>Logout</button>
+            {user ? 
+            <section className={styles.container}>
+                <h1>Welcome, {user.username}!</h1>
+                <button className={styles.logoutBtn} onClick={handleLogout}>Logout</button>
+            </section>
+            : 
+            <p>collecting user data...</p>}
             <br/>
             <OrderHistory />
         </div>

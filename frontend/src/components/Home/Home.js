@@ -8,9 +8,22 @@ export default function Home ({ user }) {
         <div>
             <nav>
                 <ul>
+                    {localStorage.getItem("user") && localStorage.getItem("user") !== "undefined" ?
+                        <li>
+                            <NavLink to={ROUTES.profile()} >
+                                Profile
+                            </NavLink>
+                        </li>
+                        :
+                        <li>
+                            <NavLink to={ROUTES.login()} >
+                                Login
+                            </NavLink>
+                        </li>
+                    }
                     <li>
-                        <NavLink to={ROUTES.register()} >
-                            Register
+                        <NavLink to={ROUTES.products()} >
+                            Products
                         </NavLink>
                     </li>
                     <li>
@@ -18,24 +31,6 @@ export default function Home ({ user }) {
                             Checkout
                         </NavLink>
                     </li>
-                    <li>
-                        <NavLink to={ROUTES.products()} >
-                            Products
-                        </NavLink>
-                    </li>
-                    {localStorage.getItem("user") && localStorage.getItem("user") !== "undefined" ?
-                    <li>
-                        <NavLink to={ROUTES.profile()} >
-                            Profile
-                        </NavLink>
-                    </li>
-                    :
-                    <li>
-                        <NavLink to={ROUTES.login()} >
-                            Login
-                        </NavLink>
-                    </li>
-}
                 </ul>
             </nav>
             <section className={styles.outlet}>

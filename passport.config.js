@@ -1,5 +1,4 @@
 const LocalStrategy = require('passport-local');
-const FacebookStrategy = require('passport-facebook');
 const { pool } = require('./db/queries');
 const bcrypt = require('bcrypt');
 const { getUserById } = require('./db/customers/functions_customers');
@@ -21,8 +20,6 @@ function passportInitialize(passport) {
                     }
                 );
             });
-
-            console.log(user);
             
             if (user == undefined) {
                 return done(null, false, { message: 'No user with that email' });
@@ -43,23 +40,19 @@ function passportInitialize(passport) {
     passport.use(new LocalStrategy({ usernameField: "email" }, authenticateUser));
 
     passport.serializeUser((user, done) => {
-        console.log('serializeUser', user, user.id);
         done(null, user.id)
     });
 
     passport.deserializeUser(async (id, done) => {
-        console.log('deserializeUser');
         const user = await getUserById(id);
         return done(null, user);
     })
 };
 
 const authCheck = (req, res, next) => {
-    console.log('auth check', req.user, req.isAuthenticated());
     if (req.isAuthenticated()) {
         next();
     } else {
-        console.log('failed authentication, redirecting to login page');
         res.status(401).json({
             authenticated: false,
             message: "user has not been authenticated"

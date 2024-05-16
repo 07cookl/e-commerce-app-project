@@ -27,7 +27,6 @@ customersRouter.put('/:id/cart', authCheck, async (req, res) => {
 customersRouter.get('/:id/cart', authCheck, (req, res) => {
     cartDb.getCartById(req.params.id)
         .then(cart => {
-            console.log('Cart:', cart);
             res.status(200).json(cart);
         })
         .catch(error => {
