@@ -100,10 +100,6 @@ app.get('/oauth2/redirect/google', passport.authenticate('google', {
     }
 );
 
-app.get('/', (req, res) => {
-    res.json({ info: 'Node.js, Express and PostgreSQL API'})
-});
-
 const authRouter = require("./routes/auth-routes");
 app.use('/auth', authRouter);
 
