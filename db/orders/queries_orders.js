@@ -5,6 +5,6 @@ const { authCheck } = require('../../passport.config');
 
 ordersRouter.get('/', db.getAllOrders);
 
-ordersRouter.get('/:id', authCheck, db.getOrderByUserId);
+ordersRouter.get('/:id', db.getOrderByUserId);
 
 module.exports = ordersRouter;

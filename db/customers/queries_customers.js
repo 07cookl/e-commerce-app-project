@@ -14,17 +14,17 @@ customersRouter.put('/:id', db.updateCustomerById);
 
 customersRouter.delete('/:id', db.deleteCustomerById);
 
-customersRouter.post('/:id/cart', authCheck, (req, res) => {
+customersRouter.post('/:id/cart', (req, res) => {
     const newCart = cartDb.createCart(req.params.id);
     res.status(201).send(newCart);
 });
 
-customersRouter.put('/:id/cart', authCheck, async (req, res) => {
+customersRouter.put('/:id/cart', async (req, res) => {
     const updatedCart = await cartDb.updateCart(req.params.id, req.body.productId);
     res.status(201).json(updatedCart);
 });
 
-customersRouter.get('/:id/cart', authCheck, (req, res) => {
+customersRouter.get('/:id/cart', (req, res) => {
     cartDb.getCartById(req.params.id)
         .then(cart => {
             res.status(200).json(cart);
@@ -34,7 +34,7 @@ customersRouter.get('/:id/cart', authCheck, (req, res) => {
         });
 });
 
-customersRouter.post('/:id/cart/checkout', authCheck, async (req, res) => {
+customersRouter.post('/:id/cart/checkout', async (req, res) => {
     const orderPlaced = await cartDb.checkout(req.params.id);
     res.status(201).json(orderPlaced);
 });
