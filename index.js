@@ -56,6 +56,14 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.get('/*', function(req, res) {
+    res.sendFile(path.join(__dirname, 'frontend/public/index.html'), function(err) {
+        if (err) {
+            res.status(500).send(err)
+        }
+        })
+    })
+
 app.get('/login', (req, res) => {
     const errorMessage = req.flash('error')[0];
     console.log(errorMessage);
