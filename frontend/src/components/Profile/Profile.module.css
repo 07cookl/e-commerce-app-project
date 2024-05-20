@@ -4,7 +4,7 @@
     justify-content: space-between;
     align-items: center;
     background: var(--card);
-    border-radius: 50px;
+    border-radius: 20px;
     padding: 4rem;
     font-size: var(--large-font);
     gap: 2rem;
@@ -21,4 +21,28 @@
     color: var(--dark-background);
     font-family: 'Quicksand', sans-serif;
     cursor: pointer;
+}
+
+@media only screen and (min-width: 1441px) {
+    .logoutBtn {
+        height: 70px;
+    }
+}
+
+@media only screen and (max-width: 1024px) {
+    .container {
+        width: 90vw;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem;
+    }
+    .logoutBtn {
+        width: 90%
+    }
 }

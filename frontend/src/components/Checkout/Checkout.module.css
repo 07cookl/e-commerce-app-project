@@ -3,7 +3,7 @@
     display: flex;
     flex-direction: column;
     background: var(--card);
-    border-radius: 50px;
+    border-radius: 20px;
     padding: 4rem;
     font-size: var(--large-font);
     gap: 2rem;
@@ -12,6 +12,7 @@
     }
     > h5 {
         font-size: var(--medium-font);
+        line-height: var(--large-font);
     }
 }
 
@@ -63,4 +64,16 @@
 .cardDetails {
     font-size: var(--small-font);
     line-height: 2rem;
+}
+
+@media only screen and (min-width: 1441px) {
+    .checkoutBtn {
+        height: 70px;
+    }
+}
+
+@media only screen and (max-width: 1024px) {
+    .container {
+        width: 90vw;
+    }
 }

@@ -31,9 +31,9 @@ font-family: 'Quicksand-Regular';
   --highlight: #789EC4;
   --text: #F6F7F8;
   --bold: #3C6691;
-  --large-font: calc(1rem + 0.75vw);
-  --medium-font: calc(1rem + 0.5vw);
-  --small-font: calc(1rem + 0.25vw);
+  --large-font: calc(1rem + 1.5vw);
+  --medium-font: calc(1rem + 1vw);
+  --small-font: calc(1rem + 0.5vw);
 
   background: var(--light-background);
   color: var(--text);
@@ -98,5 +98,14 @@ nav a:hover::after {
 @media only screen and (max-width: 601px) {
   nav {
       font-size: 1.25rem;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  nav {
+    height: 10vw;
+  }
+  nav a::after {
+    height: 0.6vw;
   }
 }
