@@ -7,6 +7,11 @@
     border-radius: 20px;
     padding: 4rem;
     font-size: var(--large-font);
+    h2 {
+        line-height: 1.5;
+        font-size: var(--small-font);
+        text-align: center;
+    }
 }
 
 .product {
